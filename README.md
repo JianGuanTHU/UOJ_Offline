@@ -19,6 +19,8 @@
 
 执行bash ./run.sh（执行之前请将run.sh中第一行的path改为你的文件夹存放的绝对位置，注意路径中不要有中文），该脚本会将题目文件夹中的submit、require、Makefile等文件复制到./work文件夹下，然后进行评测，评测结果会输出到./result文件夹中。
 
-对于不同的题目，你只需要写不同的judger，uoj_judger_compiler.py, uoj_judger_config.py, uoj_judger_reporter.py, uoj_judger_tester.py, judger_class_lib.py 这些文件不要改动。
+注意：
 
-如有疑问，请联系关健（微信：13051331318，邮箱：j-guan19@mails.tsinghua.edu.cn）。
+- 对于不同的题目，你只需要写不同的judger，uoj_judger_compiler.py, uoj_judger_config.py, uoj_judger_reporter.py, uoj_judger_tester.py, judger_class_lib.py 这些文件不要改动。
+- 该版本的UOJ仅供测试judger使用，未加入测试内存、时间使用情况等功能。
+- 如有疑问，请联系关健（微信：13051331318，邮箱：j-guan19@mails.tsinghua.edu.cn）。
