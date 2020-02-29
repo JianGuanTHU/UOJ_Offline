@@ -1,0 +1,11 @@
+Creating drawing of shapes...
+Drawing...
+Drawing Rectangle
+Drawing Circle
+Drawing Triangle with area: 0.433013 and perimeter: 3
+Drawing Rhombus with area: 1 and perimeter: 4
+Resizing...
+Resizing Rectangle
+Resizing Circle
+Triangle object can't be resized. Please create new one with required values.
+Rhombus object can't be resized. Please create new one with required values.
