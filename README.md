@@ -1,4 +1,4 @@
-#UOJ_Offline
+# UOJ_Offline
 
 使用步骤：
 
@@ -49,15 +49,15 @@
 
     ```python
     main_path = sys.argv[1] #主文件夹，当前文件
-    work_path = sys.argv[2]	#./work
-    result_path = sys.argv[3]	#./result
-    data_path = sys.argv[4]	#./data/31
+    work_path = sys.argv[2] #./work
+    result_path = sys.argv[3] #./result
+    data_path = sys.argv[4] #./data/31
     
     C = pyjudgerConfig(main_path, work_path, result_path, data_path)	#配置参数类
     n = int(C.config["n_tests"])	#测试点数
     R = pyjudgerReporter(C, n)	#结果输出类
     Co = pyjudgerCompiler(C)	#编译类
-    T = pyjudger_custom_tester(C)	#测试类，必要时可重写
+    T = pyjudger_custom_tester(C)	#测试类，必要时可在judger文件中重写该类
     ```
 
 注意：

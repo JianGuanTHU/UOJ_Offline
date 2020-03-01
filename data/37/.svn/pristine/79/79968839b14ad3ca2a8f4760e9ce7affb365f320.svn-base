@@ -1,0 +1,8 @@
+all: main4 main8
+
+main4: main.cpp MyList.h
+	g++ main.cpp -o main4 -std=c++11 -DSUBTASK1 -DSUBTASK2 -DSUBTASK3 -DSUBTASK4
+
+main8: main.cpp MyList.h
+	g++ main2.cpp -o main8 -std=c++11 -DSUBTASK1 -DSUBTASK2 -DSUBTASK3 -DSUBTASK4
+

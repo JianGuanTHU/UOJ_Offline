@@ -1,0 +1,185 @@
+#!/usr/bin/env python
+#coding=utf-8
+
+import sys
+import os
+import traceback
+
+import judger_class_lib as lib
+from uoj_judger_compiler import *
+from uoj_judger_tester import *
+from uoj_judger_reporter import *
+from uoj_judger_config import *
+'''
+class MyExecuter():
+
+	def run(self, config, tester):
+		cmd = open(tester.input_file_name, 'r').readline()
+		ret = lib.run_program( \
+			main_path=config.main_path, \
+			result_file_name=config.result_path + "/run_submission_program.txt", \
+			input_file_name="/dev/null", \
+			output_file_name=tester.output_file_name, \
+			error_file_name="/dev/null", \
+			work_path=config.work_path, \
+			limit=lib.conf_run_limit("", index=tester.num, val=lib.RL_DEFAULT, config=config), \
+			type="default", \
+			raw_para=cmd)
+		if ret.type != lib.RS_AC or ret.exit_code != 0:
+			ret.type = lib.RS_RE
+		return ret
+'''
+class custom_tester:
+	def run_program(self, config, exec_file_name="main1"):
+		ret = lib.run_program( \
+			main_path=config.main_path, \
+			result_file_name=config.result_path + "/run_submission_program.txt", \
+			input_file_name=self.input_file_name, \
+			output_file_name=self.output_file_name, \
+			error_file_name="/dev/null", \
+			work_path=config.work_path, \
+			limit=lib.conf_run_limit("", index=self.num, val=lib.RL_DEFAULT, config=config), \
+			type="default", \
+			para_list=[exec_file_name])
+		if ret.type == lib.RS_AC and ret.exit_code != 0:
+			ret.type = lib.RS_RE
+		print("run submission program:", ret.type)
+		return ret
+
+	def run_checker(self, config, checker_name="checker.py"):
+		ret = lib.run_program( \
+			main_path=config.main_path, \
+			result_file_name=config.result_path + "/run_checker_result.txt", \
+			input_file_name="/dev/null", \
+			output_file_name="/dev/null", \
+			error_file_name=config.result_path + "/checker_error.txt", \
+			work_path=config.work_path, \
+			type="python3.4", \
+			limit=lib.conf_run_limit("checker", index=self.num, val=lib.RL_CHECKER_DEFAULT, config=config), \
+			readable=[self.input_file_name, \
+					  self.output_file_name, \
+					  self.answer_file_name], \
+			para_list=[config.data_path + "/" + checker_name, \
+					   os.path.abspath(self.input_file_name), \
+					   os.path.abspath(self.output_file_name), \
+					   os.path.abspath(self.answer_file_name), \
+					   ])
+		if ret.type!=lib.RS_AC or ret.exit_code!=0:
+			return lib.RunCheckerResult(type=ret.type, usm=ret.usm, ust=ret.ust, scr=0, \
+										info=lib.file_preview(config.result_path + "/checker_error.txt", 10))
+		else:
+			R = lib.RunCheckerResult(type=ret.type, usm=ret.usm, ust=ret.ust, scr=0, \
+									 info=lib.file_preview(config.result_path + "/checker_error.txt", 10))
+			try:
+				F = lib.file_preview(config.result_path + "/checker_error.txt", 10)
+				R.info = F
+				E = F.strip().split(' ')
+				if E[0] == "ok":
+					R.scr = 100
+				elif E[0] == 'points':
+					if float(E[1]) != 1:
+						return lib.RunCheckerResult(type="RS_JGF", ust=-1, usm=-1, scr=0, info="Checker Judgment Failed")
+					else:
+						R.scr = (int)(100 * float(E[1]) + 0.5)
+				else:
+					R.scr = 0
+				return R
+			except:
+				traceback.print_exc()
+				return lib.RunCheckerResult(type="RS_JGF", ust=-1, usm=-1, scr=0, info="Checker Judgment Failed")
+
+	def test(self, i, j):
+		global C
+		self.num = point_index = i * 2 + j + 1
+		idx = point_index
+		fileid = i + j * 4 + 1
+		self.input_file_name = C.data_path + "/input%d.txt" % fileid
+		self.output_file_name = C.work_path + "/output%d.txt" % fileid
+		self.answer_file_name = C.data_path + "/output%d.txt" % fileid
+
+		exec_file_name = "main%d" % (i+1+j*4)
+
+		ret2 = self.run_program(C, exec_file_name=exec_file_name)
+		if ret2.type != lib.RS_AC:
+			print("test:", ret2.info.encode("utf-8"))
+			return lib.PointInfo(idx, 0, ust=ret2.ust, usm=ret2.usm, info=ret2.info, \
+								 input=lib.file_preview(self.input_file_name, 30))
+
+		ret3 = pyjudger_run_checker().run(C, self)
+		if ret3.type != lib.RS_AC:
+			return lib.PointInfo(idx, 0, ust=ret2.ust, usm=ret2.usm, \
+								info="Checker " + lib.info_str(ret3.type), \
+								input=lib.file_preview(self.input_file_name, 20), \
+								out=lib.file_preview(self.output_file_name, 30))
+		return lib.PointInfo(point_index, \
+							 ret3.scr, \
+							 usm=ret2.usm, \
+							 ust=ret2.ust, \
+							 info="Wrong Answer" if ret3.scr == 0 else ("Accepted" if ret3.scr==100 else "Acceptable Answer"), \
+							 input=lib.file_preview(self.input_file_name, 20), \
+							 out=lib.file_preview(self.output_file_name, 30), \
+							 res=ret3.info)
+
+if __name__=="__main__":
+	main_path = sys.argv[1]
+	work_path = sys.argv[2]
+	result_path = sys.argv[3]
+	data_path = sys.argv[4]
+
+	C = pyjudgerConfig(main_path, work_path, result_path, data_path)
+
+	R = pyjudgerReporter(C, 1)
+	Co = pyjudgerCompiler(C)
+	T = pyjudger_custom_tester(C)#), executer=MyExecuter())
+
+	R.report_judgement_status("Compiling")
+
+	for i in range(1,9):
+		os.system("rm -f %s/main%d" % (work_path, i))
+
+	chinese_file = lib.check_file_exist(work_path, result_path, [])
+	if not chinese_file[0]:
+		R.end_judge_compile_error(info=chinese_file[1])
+
+	res = []
+	all_score = 0
+	for i in range(4):
+		R.report_judgement_status("Judging #%d" % (i+1))
+
+		ret = Co.compile_command("/usr/bin/make -f Makefile%d" % (i+1))
+		if not ret.succeeded:
+			res.append(("Compile Error", 0, [lib.PointInfo(i*i+1, \
+				0, \
+				info="Compile Error", \
+				res=ret.info)]))
+			break
+
+		ret, info = lib.check_file_exist(work_path, result_path, ["main%d" % (i+1), "main%d" % (i+5)])
+		if not ret:
+			res.append(("Compile Error", 0, [lib.PointInfo(i*i+1, \
+				0, \
+				info="Compile Error", \
+				res=info)]))
+			break
+
+		sub_points = []
+		all_ok = True
+		for j in range(2):
+			ret = custom_tester().test(i, j)
+			if ret.scr < 100:
+				all_ok = False
+			#ret.scr = ret.scr * 100 / 8
+			sub_points.append(ret)
+		if all_ok:
+			now_score = 25
+		else:
+			now_score = 0
+		all_score += now_score
+		info = "Accepted" if all_ok else "Unaccepted"
+		res.append((info, now_score, sub_points))
+
+	for idx, (info, now_score, sub_points) in enumerate(res):
+		R.add_subtask_info(idx + 1, now_score, info, sub_points)
+	R.tot_score = int(all_score)
+
+	R.end_judge_ok()

@@ -1,0 +1,14 @@
+all: main2 main6
+
+main2: main.cpp MyList.h
+	g++ main.cpp -o main2 -std=c++11 -DSUBTASK1 -DSUBTASK2
+	
+main6: main.cpp MyList.h
+	g++ main2.cpp -o main6 -std=c++11 -DSUBTASK1 -DSUBTASK2
+
+main7: main.cpp MyList.h
+	g++ main2.cpp -o main7 -std=c++11 -DSUBTASK1 -DSUBTASK2 -DSUBTASK3
+
+main8: main.cpp MyList.h
+	g++ main2.cpp -o main8 -std=c++11 -DSUBTASK1 -DSUBTASK2 -DSUBTASK3 -DSUBTASK4
+
