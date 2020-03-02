@@ -1,2 +1,0 @@
-g++ main.cpp -o main4 -std=c++11 -DSUBTASK1 -DSUBTASK2 -DSUBTASK3 -DSUBTASK4
-g++ main2.cpp -o main8 -std=c++11 -DSUBTASK1 -DSUBTASK2 -DSUBTASK3 -DSUBTASK4

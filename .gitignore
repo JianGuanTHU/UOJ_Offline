@@ -2,5 +2,5 @@
 */.DS_Store
 *.pyc
 */*.pyc
-data/*/submit/*
-data/*/answer/*
+work/*
+result/*
