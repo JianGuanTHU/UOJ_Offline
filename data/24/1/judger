@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+#coding=utf-8
+
+import sys
+import os
+
+import judger_class_lib as lib
+from uoj_judger_compiler import *
+from uoj_judger_tester import *
+from uoj_judger_reporter import *
+from uoj_judger_config import *
+
+if __name__=="__main__":
+	main_path = sys.argv[1]
+	work_path = sys.argv[2]
+	result_path = sys.argv[3]
+	data_path = sys.argv[4]
+
+	C = pyjudgerConfig(main_path, work_path, result_path, data_path)
+	n = int(C.config["n_tests"])
+	R = pyjudgerReporter(C, n)
+	Co = pyjudgerCompiler(C)
+	T = pyjudger_custom_tester(C)#), executer=MyExecuter())
+
+	R.report_judgement_status("Compiling")
+	ret = Co.compile_command("/usr/bin/make")
+	if not ret.succeeded:
+		R.end_judge_compile_error(info=lib.file_preview(result_path + "/compiler_result.txt"))
+	res, info = lib.check_file_exist(work_path, result_path, ["main"])
+	if not res:
+		R.end_judge_custom_error("Make Failed", info)
+
+	for i in range(n):
+		t = i + 1
+		R.report_judgement_status("Judging #%d" % t)
+		ret = T.test(t) 
+		R.add_point_info(ret)
+
+	R.end_judge_ok()

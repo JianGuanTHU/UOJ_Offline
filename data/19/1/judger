@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+#coding=utf-8
+
+import sys
+import os
+
+import judger_class_lib as lib
+from uoj_judger_compiler import *
+from uoj_judger_tester import *
+from uoj_judger_reporter import *
+from uoj_judger_config import *
+
+class MyExecuter():
+
+	def run(self, config, tester):
+		cmd = open(tester.input_file_name, 'r').readline()
+		ret = lib.run_program( \
+			main_path=config.main_path, \
+			result_file_name=config.result_path + "/run_submission_program.txt", \
+			input_file_name="/dev/null", \
+			output_file_name=tester.output_file_name, \
+			error_file_name="/dev/null", \
+			work_path=config.work_path, \
+			limit=lib.conf_run_limit("", index=tester.num, val=lib.RL_DEFAULT, config=config), \
+			type="default", \
+			raw_para=cmd)
+		if ret.type == lib.RS_AC and ret.exit_code != 0:
+			ret.type = lib.RS_RE
+		return ret
+
+if __name__=="__main__":
+	main_path = sys.argv[1]
+	work_path = sys.argv[2]
+	result_path = sys.argv[3]
+	data_path = sys.argv[4]
+
+	C = pyjudgerConfig(main_path, work_path, result_path, data_path)
+	n = int(C.config["n_tests"])
+	R = pyjudgerReporter(C, n)
+	Co = pyjudgerCompiler(C)
+	T = pyjudger_custom_tester(C, executer=MyExecuter())
+
+	R.report_judgement_status("Compiling")
+	ret = Co.compile("main")
+	if not ret.succeeded:
+		R.end_judge_compile_error(info=lib.file_preview(result_path + "/compiler_result.txt"))
+
+	for i in range(n):
+		t = i + 1
+		R.report_judgement_status("Judging #%d" % t)
+		ret = T.test(t)
+		R.add_point_info(ret)
+
+	R.end_judge_ok()
