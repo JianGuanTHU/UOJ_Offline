@@ -1,7 +1,0 @@
-all: main1 main5
-
-main1: main.cpp MyList.h
-	g++ main.cpp -o main1 -std=c++11 -DSUBTASK1
-
-main5: main.cpp MyList.h
-	g++ main2.cpp -o main5 -std=c++11 -DSUBTASK1

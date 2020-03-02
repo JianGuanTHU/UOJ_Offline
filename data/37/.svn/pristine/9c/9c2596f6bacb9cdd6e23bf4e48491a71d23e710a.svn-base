@@ -1,8 +1,0 @@
-all: main3 main7
-
-main3: main.cpp MyList.h
-	g++ main.cpp -o main3 -std=c++11 -DSUBTASK1 -DSUBTASK2 -DSUBTASK3
-
-main7: main.cpp MyList.h
-	g++ main2.cpp -o main7 -std=c++11 -DSUBTASK1 -DSUBTASK2 -DSUBTASK3
-
