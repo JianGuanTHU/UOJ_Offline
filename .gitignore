@@ -4,4 +4,4 @@
 */*.pyc
 work/*
 result/*
-*/submit/*
+data/*/1/submit/*
