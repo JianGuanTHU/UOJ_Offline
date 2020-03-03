@@ -5,7 +5,7 @@
 - 将题目按照`./data/`中样题的格式放进`./data`文件夹中
 - 将`./submission.conf`中的`problem_id`改为你出的题目号（如31）
 - 执行`make`，重新编译输出各个`checker`的可执行文件
-- 执行`bash ./run.sh`（执行之前请将`run.sh`中第一行的`path`改为你的文件夹存放的绝对路径，注意路径中不要有中文，运行此脚本需要python2环境），该脚本会将题目文件夹中的`submit`、`require`、`Makefile`、`judger`等文件复制到`./work`文件夹下，然后进行评测，评测结果会输出到`./result`文件夹中。
+- 执行`bash ./run.sh`（执行之前请将`run.sh`中第一行的`path`改为你的文件夹存放的绝对路径，注意路径中不要有中文，运行此脚本需要`python2`环境），该脚本会将题目文件夹中的`submit`、`require`、`Makefile`、`judger`等文件复制到`./work`文件夹下，然后进行评测，评测结果会输出到`./result`文件夹中。
 
 文件说明：
 
@@ -13,7 +13,7 @@
 
   - `download`文件夹中的文件供做题同学下载；
   - `require`文件夹中的文件是评测提交代码时所需的文件；
-  - `submi`t文件夹中的内容为标准提交答案；
+  - `submit`文件夹中的内容为标准提交答案；
   - 输入文件、输出文件
   - `judger`：评测文件，具体见下方Judger系统说明
   - `problem.conf`文件中定义了一些评测参数：
