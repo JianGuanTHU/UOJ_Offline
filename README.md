@@ -5,7 +5,7 @@
 - 将题目按照`./data/`中样题的格式放进`./data`文件夹中
 - 将`./submission.conf`中的`problem_id`改为你出的题目号（如31）
 - 执行`make`，重新编译输出各个`checker`的可执行文件
-- 执行`bash ./run.sh`（执行之前请将`run.sh`中第一行的`path`改为你的文件夹存放的绝对路径，注意路径中不要有中文），该脚本会将题目文件夹中的`submit`、`require`、`Makefile`、`judger`等文件复制到`./work`文件夹下，然后进行评测，评测结果会输出到`./result`文件夹中。
+- 执行`bash ./run.sh`（执行之前请将`run.sh`中第一行的`path`改为你的文件夹存放的绝对路径，注意路径中不要有中文，运行此脚本需要python2环境），该脚本会将题目文件夹中的`submit`、`require`、`Makefile`、`judger`等文件复制到`./work`文件夹下，然后进行评测，评测结果会输出到`./result`文件夹中。
 
 文件说明：
 
@@ -34,6 +34,8 @@
   - `result.txt`：评测完成后的输出文件
 
 - `./builtin`：包含了系统提供的多种`checker`
+
+- `./include`：包含编译`checker`所需的头文件
 
 - `Makefile`：编译`./builtin`中的`checker`
 
