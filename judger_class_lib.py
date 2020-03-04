@@ -144,16 +144,16 @@ def run_program(main_path, result_file_name, input_file_name, output_file_name, 
 	command += " && cd %s" % main_path
 	print("command is : ", command)
 	try:
-		os.system(command)
+		exit_code = os.system(command)
 		#print io.open(result_file_name,'r').readline()
 		# data_raw = '\n'.join(io.open(result_file_name,'r').readline().split(' '))
 		data = "\n".join(io.open(error_file_name,'r').readlines()).strip()
 		# result = RunResult(int(data[0]), int(data[1]), int(data[2]), int(data[3]))
-		print("data", data)
-		if data != "" and not (data.split()[0] == "ok" or data.split()[0] == "wrong" or data.split()[0] == "points"):
-			result = RunResult_failed_result()
-		else:
-			result = RunResult(exit_code=0)
+		print("exit_code:", exit_code, "data", data)
+		# if "error" in data or "Error" in data or "ERROR" in data:
+		# 	result = RunResult_failed_result()
+		# else:
+		result = RunResult(exit_code=exit_code)
 		return result
 	except:
 		import traceback; traceback.print_exc();
