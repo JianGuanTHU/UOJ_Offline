@@ -11,12 +11,14 @@ class pyjudgerCompiler(object):
 
 		ret = lib.run_program( \
 			main_path=self.config.main_path, \
+			work_path=self.config.work_path, \
 			result_file_name=self.config.result_path + "/run_compiler_result.txt", \
 			input_file_name="/dev/null", \
 			output_file_name="stderr", \
 			error_file_name=self.config.result_path + "/compiler_result.txt", \
 			limit=lib.RL_COMPILER_DEFAULT, \
-			para_list=argv)
+			para_list=argv, \
+			uoj_offline=("uoj_offline" in self.config.config))
 		res = lib.RunCompilerResult(type=ret.type, ust=ret.ust, usm=ret.usm, \
 					succeeded=(ret.type == lib.RS_AC) and (ret.exit_code == 0))
 		if not res.succeeded:

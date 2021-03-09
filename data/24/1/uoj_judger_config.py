@@ -17,7 +17,7 @@ class pyjudgerConfig:
 		self.problem_id = self.config['problem_id']
 		self.data_path = data_path
 		load_config(self.data_path + "/problem.conf")
-		self.exec_file_name = "main"
+		self.exec_file_name = "./main"
 
 		#exec("cp %s/require/* %s 2>/dev/null"%(self.__data_path, self.__work_path))
 

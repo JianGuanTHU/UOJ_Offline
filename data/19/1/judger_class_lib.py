@@ -116,36 +116,60 @@ def escapeshellarg(arg):
 	return "'" + arg.replace("\\", "\\\\") + "'"
 
 def run_program(main_path, result_file_name, input_file_name, output_file_name, error_file_name, \
-		limit, para_list=None, type=None, work_path=None, readable=None, raw_para=None):
+		limit, para_list=None, type=None, work_path=None, readable=None, raw_para=None, uoj_offline=False):
 
 	para_list = para_list or []
 	readable = readable or []
 	#limit : RunLimit
-	command = " ".join([main_path + "/run/run_program", \
-						">" + escapeshellarg(result_file_name), \
-						"--in=" + escapeshellarg(input_file_name), \
-						"--out=" + escapeshellarg(output_file_name), \
-						"--err=" + escapeshellarg(error_file_name), \
-						"--tl=" + str(limit.time), \
-						"--ml=" + str(limit.memory), \
-						"--ol=" + str(limit.output), \
-						])
-	command += " --type=" + str(type) if (type) else ""
-	command += " --work-path=" + work_path if (work_path) else ""
-	command += " " +  " ".join([" --add-readable=" + each for each in readable])
-	command += " " + " ".join([para for para in para_list])
-	command += (" " + raw_para) if raw_para else ""
-	print("command is : ", command)
-	try:
-		os.system(command)
-		#print open(result_file_name,'r').readline()
-		data_raw = '\n'.join(open(result_file_name,'r').readline().split(' '))
-		data = open(result_file_name,'r').readline().strip().split(' ')
-		print("data", data)
-		result = RunResult(int(data[0]), int(data[1]), int(data[2]), int(data[3]))
-		return result
-	except:
-		return RunResult_failed_result()
+	if uoj_offline:
+		command = "cd %s" % (work_path)
+		command += " && %s" % (" ".join([para for para in para_list if ("type" not in para and "work-path" not in para)])) if len(para_list) != 0 else ""
+		command += (" && " + raw_para) if raw_para else ""
+		command += " <" + escapeshellarg(input_file_name)
+		command += " >" + escapeshellarg(output_file_name)
+		command += " 2>" + escapeshellarg(error_file_name)
+		command += " && cd %s" % main_path
+		print("command is : ", command)
+		try:
+			exit_code_ = os.system(command)
+			value, exit_code = (exit_code_)>>8, exit_code_&0xff
+			#print io.open(result_file_name,'r').readline()
+			data = "\n".join(open(error_file_name,'r').readlines()).strip()
+			print("value:", value, "exit_code:", exit_code, "data", data)
+			if value != 0:
+				result = RunResult(type=RS_RE, exit_code=exit_code)
+			else:
+				result = RunResult(exit_code=exit_code)
+			return result
+		except:
+			import traceback; traceback.print_exc();
+			return RunResult_failed_result()
+	else:
+		command = " ".join([main_path + "/run/run_program", \
+							">" + escapeshellarg(result_file_name), \
+							"--in=" + escapeshellarg(input_file_name), \
+							"--out=" + escapeshellarg(output_file_name), \
+							"--err=" + escapeshellarg(error_file_name), \
+							"--tl=" + str(limit.time), \
+							"--ml=" + str(limit.memory), \
+							"--ol=" + str(limit.output), \
+							])
+		command += " --type=" + str(type) if (type) else ""
+		command += " --work-path=" + work_path if (work_path) else ""
+		command += " " +  " ".join([" --add-readable=" + each for each in readable])
+		command += " " + " ".join([para for para in para_list])
+		command += (" " + raw_para) if raw_para else ""
+		print("command is : ", command)
+		try:
+			os.system(command)
+			#print open(result_file_name,'r').readline()
+			# data_raw = '\n'.join(open(result_file_name,'r').readline().split(' '))
+			data = open(result_file_name,'r').readline().strip().split(' ')
+			print("data", data)
+			result = RunResult(int(data[0]), int(data[1]), int(data[2]), int(data[3]))
+			return result
+		except:
+			return RunResult_failed_result()
 
 def file_preview(input_file_name, range=100):
 	try:
