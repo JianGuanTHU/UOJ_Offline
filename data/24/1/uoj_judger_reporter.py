@@ -13,7 +13,7 @@ class pyjudgerReporter:
 		self.test_num = test_num
 
 	def report_judgement_status(self, info):
-		print self.config.result_path+"/cur_status.txt"
+		print(self.config.result_path+"/cur_status.txt")
 		F = open(self.config.result_path+"/cur_status.txt", "w")
 		fcntl.flock(F.fileno(), fcntl.LOCK_EX)
 		F.write(info[:512])

@@ -14,7 +14,7 @@ class pyjudgerReporter:
 
 	def report_judgement_status(self, info):
 		print(self.config.result_path+"/cur_status.txt")
-		F = open(self.config.result_path+"/cur_status.txt", "w", encoding='utf-8')
+		F = open(self.config.result_path+"/cur_status.txt", "w")
 		fcntl.flock(F.fileno(), fcntl.LOCK_EX)
 		F.write(info[:512])
 
@@ -49,7 +49,7 @@ class pyjudgerReporter:
 		self.details_out += " </subtask>\n"
 
 	def end_judge_ok(self):
-		F = open(self.config.result_path+"/result.txt", "w", encoding="utf8")
+		F = open(self.config.result_path+"/result.txt", "w")
 		F.write("score %d\n" % self.tot_score)
 		F.write("time %d\n" % self.tot_time)
 		F.write("memory %d\n" % self.max_memory)
@@ -61,25 +61,25 @@ class pyjudgerReporter:
 		exit(0)
 
 	def end_judge_judgement_failed(self, info=""):
-		F = open(self.config.result_path+"/result.txt", "w", encoding="utf8")
+		F = open(self.config.result_path+"/result.txt", "w")
 		F.write("error Judgment Failed\n")
 		F.write("details\n")
-		F.write(("<error>%s</error>\n" % lib.htmlspecialchars(info)))
+		F.write("<error>%s</error>\n" % lib.htmlspecialchars(info))
 		F.close()
 		exit(0)
 
 	def end_judge_compile_error(self, info=""):
-		F = open(self.config.result_path+"/result.txt", "w", encoding="utf8")
+		F = open(self.config.result_path+"/result.txt", "w")
 		F.write("error Compile Error\n")
 		F.write("details\n")
-		F.write(("<error>%s</error>\n" % lib.htmlspecialchars(info)))
+		F.write("<error>%s</error>\n" % lib.htmlspecialchars(info))
 		F.close()
 		exit(0)
 		
 	def end_judge_custom_error(self, label, info=""):
-		F = open(self.config.result_path+"/result.txt", "w", encoding="utf8")
+		F = open(self.config.result_path+"/result.txt", "w")
 		F.write("error %s\n" % label)
 		F.write("details\n")
-		F.write(("<error>%s</error>\n" % lib.htmlspecialchars(info)))
+		F.write("<error>%s</error>\n" % lib.htmlspecialchars(info))
 		F.close()
 		exit(0)

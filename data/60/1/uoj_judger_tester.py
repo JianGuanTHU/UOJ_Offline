@@ -36,6 +36,7 @@ class pyjudger_run_submission_program():
 			para_list=[config.exec_file_name])
 		if ret.type == lib.RS_AC and ret.exit_code != 0:
 			ret.type = lib.RS_RE
+		print("run submission program:", ret.type)
 		return ret
 
 class pyjudger_run_checker():
@@ -130,6 +131,7 @@ class pyjudger_custom_tester():
 			if 'token' in self.config.config:
 				lib.file_hide_token(self.output_file_name, self.config.config['token'])
 			if ret2.type != lib.RS_AC:
+				print("test:", ret2.info)
 				return lib.PointInfo(point_index, 0, ust=ret2.ust, usm=ret2.usm, info=ret2.info, \
 									 input=lib.file_preview(self.input_file_name))
 

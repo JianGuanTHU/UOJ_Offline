@@ -40,7 +40,8 @@ class custom_tester:
 			work_path=config.work_path, \
 			limit=lib.conf_run_limit("", index=self.num, val=lib.RL_DEFAULT, config=config), \
 			type="default", \
-			para_list=[exec_file_name])
+			para_list=[exec_file_name],
+			uoj_offline=(("uoj_offline" in config.config)))
 		if ret.type == lib.RS_AC and ret.exit_code != 0:
 			ret.type = lib.RS_RE
 		print("run submission program:", ret.type)
@@ -63,7 +64,8 @@ class custom_tester:
 					   os.path.abspath(self.input_file_name), \
 					   os.path.abspath(self.output_file_name), \
 					   os.path.abspath(self.answer_file_name), \
-					   ])
+					   ],
+			uoj_offline=(("uoj_offline" in config.config)))
 		if ret.type!=lib.RS_AC or ret.exit_code!=0:
 			return lib.RunCheckerResult(type=ret.type, usm=ret.usm, ust=ret.ust, scr=0, \
 										info=lib.file_preview(config.result_path + "/checker_error.txt", 10))

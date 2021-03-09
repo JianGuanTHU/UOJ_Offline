@@ -16,7 +16,8 @@ class pyjudger_validator():
 			error_file_name=config.result_path + "/validator_error.txt", \
 			work_path=config.work_path, \
 			limit=lib.conf_run_limit('validator', tester.num, lib.RL_VALIDATOR_DEFAULT, config), \
-			para_list=[config.config['validator']])
+			para_list=[config.config['validator']], \
+			uoj_offline=("uoj_offline" in config.config))
 		return lib.RunValidatorResult(type=ret.type, usm=ret.usm, ust=ret.ust, \
 									  succeeded=(ret.type==lib.RS_AC and ret.exit_code==0), \
 									  info=lib.file_preview(config.result_path + "/validator_error.txt"))
@@ -33,13 +34,14 @@ class pyjudger_run_submission_program():
 			work_path=config.work_path, \
 			limit=lib.conf_run_limit("", index=tester.num, val=lib.RL_DEFAULT, config=config), \
 			type="default", \
-			para_list=[config.exec_file_name])
+			para_list=[config.exec_file_name], \
+			uoj_offline=("uoj_offline" in config.config))
 		if ret.type == lib.RS_AC and ret.exit_code != 0:
 			ret.type = lib.RS_RE
+		print("run submission program:", ret.type)
 		return ret
 
 class pyjudger_run_checker():
-
 	def run(self, config, tester):
 		ret = lib.run_program( \
 			main_path=config.main_path, \
@@ -56,7 +58,8 @@ class pyjudger_run_checker():
 					   os.path.abspath(tester.input_file_name), \
 					   os.path.abspath(tester.output_file_name), \
 					   os.path.abspath(tester.answer_file_name), \
-					   ])
+					   ], \
+			uoj_offline=("uoj_offline" in config.config))
 		if ret.type!=lib.RS_AC or ret.exit_code!=0:
 			return lib.RunCheckerResult(type=ret.type, usm=ret.usm, ust=ret.ust, scr=0, \
 										info=lib.file_preview(config.result_path + "/checker_error.txt"))
@@ -65,7 +68,7 @@ class pyjudger_run_checker():
 									 info=lib.file_preview(config.result_path + "/checker_error.txt"))
 			try:
 				F = lib.file_preview(config.result_path + "/checker_error.txt")
-				ret.info = F
+				R.info = F
 				E = F.split(' ')
 				if E[0] == "ok":
 					R.scr = 100
@@ -108,6 +111,7 @@ class pyjudger_custom_tester():
 	def test(self, point_index):
 		#init
 		self.generate_config(point_index)
+
 		#phase1
 		if self.config.config.get('validate_input_before_test') == 'on':
 			ok, ret1 = self.run_validator_and_get_result()
@@ -117,6 +121,7 @@ class pyjudger_custom_tester():
 			if ret1.type != lib.RS_AC:
 				return lib.PointInfo(point_index, 0, ust=ret1.ust, usm=ret1.usm, \
 					info=ret1.info, input=lib.file_preview(self.input_file_name))
+
 		# phase2
 		if self.config.config.get('submit_answer') == 'on':
 			ret2 = lib.RunResult(type=lib.RS_AC, ust=-1, usm=-1, exit_code=0)
@@ -128,8 +133,10 @@ class pyjudger_custom_tester():
 			if 'token' in self.config.config:
 				lib.file_hide_token(self.output_file_name, self.config.config['token'])
 			if ret2.type != lib.RS_AC:
+				print("test:", ret2.info)
 				return lib.PointInfo(point_index, 0, ust=ret2.ust, usm=ret2.usm, info=ret2.info, \
 									 input=lib.file_preview(self.input_file_name))
+
 		# phase3
 		ok, ret3 = self.run_checker_and_get_result()
 		if not ok:

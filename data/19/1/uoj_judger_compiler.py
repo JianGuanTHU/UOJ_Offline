@@ -26,7 +26,6 @@ class pyjudgerCompiler(object):
 				res.info = "No Comment"
 			else:
 				res.info = "Compiler " + lib.info_str(res.type)
-		print res.info
 		return res
 
 	def compile_cpp(self, name, path=None):

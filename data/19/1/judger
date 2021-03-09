@@ -23,7 +23,8 @@ class MyExecuter():
 			work_path=config.work_path, \
 			limit=lib.conf_run_limit("", index=tester.num, val=lib.RL_DEFAULT, config=config), \
 			type="default", \
-			raw_para=cmd)
+			raw_para=cmd, \
+			uoj_offline=("uoj_offline" in config.config))
 		if ret.type == lib.RS_AC and ret.exit_code != 0:
 			ret.type = lib.RS_RE
 		return ret

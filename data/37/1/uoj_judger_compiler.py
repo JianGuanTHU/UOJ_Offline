@@ -23,10 +23,9 @@ class pyjudgerCompiler(object):
 			if res.type == lib.RS_AC:
 				res.info = lib.file_preview(self.config.result_path + "/compiler_result.txt", 500)
 			elif res.type == lib.RS_JGF:
-				res.info = "Compiler Dangerous System Call"
+				res.info = "No Comment"
 			else:
 				res.info = "Compiler " + lib.info_str(res.type)
-		print(res.info.encode("utf-8"))
 		return res
 
 	def compile_cpp(self, name, path=None):
@@ -43,7 +42,7 @@ class pyjudgerCompiler(object):
 		name = para
 		if name + '_language' in self.config.config:
 			lang = self.config.config[name + '_language']
-			print("has a language :", lang.encode("utf-8"))
+			print("has a language :", lang)
 			#TODO check language type
 			return self.compile_cpp(name)
 		else:

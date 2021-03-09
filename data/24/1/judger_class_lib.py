@@ -135,7 +135,7 @@ def run_program(main_path, result_file_name, input_file_name, output_file_name, 
 	command += " " +  " ".join([" --add-readable=" + each for each in readable])
 	command += " " + " ".join([para for para in para_list])
 	command += (" " + raw_para) if raw_para else ""
-	print "command is : ", command
+	print("command is : ", command)
 	try:
 		os.system(command)
 		#print open(result_file_name,'r').readline()
@@ -174,13 +174,18 @@ def file_hide_token(file_name, token):
 		f.close()
 
 def conf_run_limit(pre, index, val, config):
-	def init_limit(key, default):
-		return config.config[key] if key in config.config else default
-	if pre == "":
-		pre = "_"
-	return RunLimit(time=init_limit(pre+"time_limit_" + str(index), val.time), \
-					memory=init_limit(pre+"memory_limit_" + str(index), val.memory), \
-					output=init_limit(pre+"output_limit_" + str(index), val.output) \
+	def init_limit(key, index, default):
+		if key + "_" + index in config.config:
+			return config.config[key + "_" + index]
+		if key in config.config:
+			return config.config[key]
+		return default
+
+	if pre != "":
+		pre += "_"
+	return RunLimit(time=init_limit(pre+"time_limit", str(index), val.time), \
+					memory=init_limit(pre+"memory_limit", str(index), val.memory), \
+					output=init_limit(pre+"output_limit", str(index), val.output) \
 					)
 
 def htmlspecialchars(string=""):

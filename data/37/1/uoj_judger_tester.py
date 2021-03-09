@@ -66,8 +66,8 @@ class pyjudger_run_checker():
 									 info=lib.file_preview(config.result_path + "/checker_error.txt"))
 			try:
 				F = lib.file_preview(config.result_path + "/checker_error.txt")
-				R.info = F
-				E = F.strip().split(' ')
+				ret.info = F
+				E = F.split(' ')
 				if E[0] == "ok":
 					R.scr = 100
 				elif E[0] == 'points':
@@ -131,7 +131,7 @@ class pyjudger_custom_tester():
 			if 'token' in self.config.config:
 				lib.file_hide_token(self.output_file_name, self.config.config['token'])
 			if ret2.type != lib.RS_AC:
-				print("test:", ret2.info.encode("utf-8"))
+				print("test:", ret2.info)
 				return lib.PointInfo(point_index, 0, ust=ret2.ust, usm=ret2.usm, info=ret2.info, \
 									 input=lib.file_preview(self.input_file_name))
 

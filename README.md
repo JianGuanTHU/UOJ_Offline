@@ -2,18 +2,18 @@
 
 ### 出题流程：
 
-- 在本项目issues中提出proposal。需要写一个简略的题目描述，列出考查的知识点。可以提供部分代码或样例数据。因为可能会被建议修改，为减轻大家工作量，不需要将题目完全完善。
+- 在本项目issues中提出proposal。需要写一个简略的题目描述，列出考查的知识点。可以提供部分代码或样例数据。因为可能会被建议修改，为减轻大家工作量，不需要将题目完全完善。Proposal截止**13周周日**。
 
-- 提醒助教确认。助教会根据情况提出修改意见。如果不太符合课程需要，可能会要求大幅度修改或重新提proposal。通过proposal的同学可以确定免去当次作业。
+- 助教一般在一周内会根据情况提出修改意见。如果不太符合课程需要，可能会要求大幅度修改或重新提proposal。通过proposal的同学可以继续出题。
 
-- 按下述使用步骤完成题面、数据、标答和judger。若有人工评分，需要具体给出评分点。
+- 按下述使用步骤完成题面、数据、标答和judger。若有人工评分，需要具体给出评分方式。
 
 ### 使用步骤：
 
 - 将题目按照`./data/`中样题的格式放进`./data`文件夹中
 - 将`./submission.conf`中的`problem_id`改为你出的题目号（如31）
 - 执行`make`，重新编译输出各个`checker`的可执行文件
-- 执行`bash ./run.sh`（执行之前请将`run.sh`中第一行的`path`改为你的文件夹存放的绝对路径，注意路径中不要有中文，运行此脚本需要`python2`环境），该脚本会将题目文件夹中的`submit`、`require`、`Makefile`、`judger`等文件复制到`./work`文件夹下，然后进行评测，评测结果会输出到`./result`文件夹中。
+- 执行`bash ./run.sh`（执行之前请将`run.sh`中第一行的`path`改为你的文件夹存放的绝对路径，注意路径中不要有中文），该脚本会将题目文件夹中的`submit`、`require`、`Makefile`、`judger`等文件复制到`./work`文件夹下，然后进行评测，评测结果会输出到`./result`文件夹中。
 
 ### 文件说明：
 
@@ -31,6 +31,8 @@
     - memory_limit: 空间限制
     - input_pre/input_suf/output_pre/output_suf: 输入/输出文件前缀/后缀
     - use_builtin_checker: 系统提供的比较答案是否正确的checker（具体cheker名可见`./builtin/checker`文件夹下，如`lcmp`要求全匹配，`rncmp`要求浮点数误差范围内匹配等）
+    - use_python_judger：当设置为"on"时使用python2对judger进行编译
+    - use_python3_judger: 当设置为"on"时使用python3对judger进行编译（不设置时默认使用python2）
 
 - `./work`：评测时所用的工作文件夹，每次评测前都会清空原有内容
 
@@ -43,6 +45,13 @@
 
 - `./builtin`：包含了系统提供的多种`checker`
 
+  - `lcmp`: 按行比较，忽略末尾空白字符
+  - `rcmp`: 单个浮点数比较，绝对值误差不超过1.5e-6
+  - `rcmp4`: 单个浮点数比较，绝对值误差不超过1e-4
+  - `rcmp6`: 单个浮点数比较，绝对值误差不超过1e-6
+  - `rncmp`: 多个浮点数比较，绝对值误差不超过1.5e-5
+  - `ncmp`: 多个整数比较
+
 - `./include`：包含编译`checker`所需的头文件
 
 - `Makefile`：编译`./builtin`中的`checker`
@@ -50,6 +59,8 @@
 - `submission.conf`：包含`problem_id`等评测参数
 
 - `find_problem_id.py`：供`run.sh`查询评测题目id使用
+
+- `find_python_version.py`: 供`run.sh`查询python版本使用
 
 - Judger系统：
 
@@ -76,9 +87,10 @@
   - 24：标准judger
   - 19：重写Executer
   - 22：重写checker
-  - 25：选择题
   - 37：重写整个tester+子任务
+  - 60：选择题
 - 项目中`./work`、`./result`、题目中`submit`、`require`、`download`等空文件夹未显示，运行脚本时将自动处理，无需手动创建；
 - 样题均未提供标准答案（包括人工评分标准），如有需要，可联系助教；
 - 该项目仅供测试judger使用，未加入测试内存、时间使用情况等功能，且不能明确具体的错误类型，除了编译错误外其他错误均显示为Wrong Answer；
 - 如对项目代码疑问，请联系关健（邮箱：j-guan19@mails.tsinghua.edu.cn）。
+

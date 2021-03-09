@@ -13,7 +13,7 @@ class pyjudgerConfig:
 		self.main_path = main_path
 		self.work_path = work_path
 		self.result_path = result_path
-		load_config(self.main_path + "/submission.conf")
+		load_config(self.work_path + "/submission.conf")
 		self.problem_id = self.config['problem_id']
 		self.data_path = data_path
 		load_config(self.data_path + "/problem.conf")

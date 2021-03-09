@@ -13,7 +13,7 @@ class pyjudgerReporter:
 		self.test_num = test_num
 
 	def report_judgement_status(self, info):
-		print self.config.result_path+"/cur_status.txt"
+		print(self.config.result_path+"/cur_status.txt")
 		F = open(self.config.result_path+"/cur_status.txt", "w")
 		fcntl.flock(F.fileno(), fcntl.LOCK_EX)
 		F.write(info[:512])
@@ -25,7 +25,7 @@ class pyjudgerReporter:
 			self.max_memory = info.usm
 		self.details_out += "<test num=\"%u\" score=\"%u\"  info=\"%s\"  time=\"%u\"  memory=\"%u\">"\
 				% (info.num, info.scr / self.test_num, info.info, info.ust, info.usm)
-		self.tot_score += info.scr
+		self.tot_score += info.scr / self.test_num
 		if info.input:
 			self.details_out += "<in>%s</in>" % (lib.htmlspecialchars(info.input))
 		if info.output:
@@ -33,7 +33,7 @@ class pyjudgerReporter:
 		if info.res:
 			self.details_out += "<res>%s</res>" % (lib.htmlspecialchars(info.res))
 		if info.extrainfo:
-			self.details_out += lib.htmlspecialchars(info.extrainfo)
+			self.details_out += info.extrainfo
 		self.details_out += "</test>\n"
 
 	def add_subtask_info(self, subTaskIndex, scr=0, info="", points=None):
@@ -50,7 +50,7 @@ class pyjudgerReporter:
 
 	def end_judge_ok(self):
 		F = open(self.config.result_path+"/result.txt", "w")
-		F.write("score %d\n" % (self.tot_score / self.test_num))
+		F.write("score %d\n" % self.tot_score)
 		F.write("time %d\n" % self.tot_time)
 		F.write("memory %d\n" % self.max_memory)
 		F.write("details\n")
@@ -71,6 +71,14 @@ class pyjudgerReporter:
 	def end_judge_compile_error(self, info=""):
 		F = open(self.config.result_path+"/result.txt", "w")
 		F.write("error Compile Error\n")
+		F.write("details\n")
+		F.write("<error>%s</error>\n" % lib.htmlspecialchars(info))
+		F.close()
+		exit(0)
+		
+	def end_judge_custom_error(self, label, info=""):
+		F = open(self.config.result_path+"/result.txt", "w")
+		F.write("error %s\n" % label)
 		F.write("details\n")
 		F.write("<error>%s</error>\n" % lib.htmlspecialchars(info))
 		F.close()
