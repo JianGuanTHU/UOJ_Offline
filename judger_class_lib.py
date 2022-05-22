@@ -103,7 +103,7 @@ def numbers_to_strings(argument):
 
 def info_str(id):
 	switcher = { \
-		RS_MLE: "zero", \
+		RS_MLE: "Memory Limit Exceeded", \
 		RS_TLE: "Time Limit Exceeded", \
 		RS_OLE: "Output Limit Exceeded", \
 		RS_RE: "Runtime Error", \
