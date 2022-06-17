@@ -25,7 +25,7 @@ class MyChecker():
 					  tester.output_file_name, \
 					  tester.answer_file_name,
 					 ], \
-			para_list=["python3",\
+			para_list=["python3.4",\
 					   config.data_path + "/checker.py",\
 					   os.path.abspath(tester.input_file_name), \
 					   os.path.abspath(tester.output_file_name), \
